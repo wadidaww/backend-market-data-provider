@@ -1,0 +1,12 @@
+{
+  "queue_capacity": 4096,
+  "order_book_depth": 50,
+  "replay_mode": false,
+  "sources": [
+    {
+      "name": "mock_primary",
+      "type": "mock",
+      "endpoint": "memory://mock_primary"
+    }
+  ]
+}
