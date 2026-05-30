@@ -34,25 +34,25 @@ class AdminService final {
   explicit AdminService(const core::MarketDataService& service) : service_(service) {}
 
   [[nodiscard]] util::StatusOr<bool> Health(const std::string_view password) const {
-    const auto auth = RequestAuthenticator::Authenticate(password);
-    if (!auth.ok()) {
-      return auth;
+    const auto status = Authenticate(password);
+    if (!status.ok()) {
+      return status;
     }
-    return true;
+    return service_.is_ready();
   }
 
   [[nodiscard]] util::StatusOr<bool> Ready(const std::string_view password) const {
-    const auto auth = RequestAuthenticator::Authenticate(password);
-    if (!auth.ok()) {
-      return auth;
+    const auto status = Authenticate(password);
+    if (!status.ok()) {
+      return status;
     }
     return service_.is_ready();
   }
 
   [[nodiscard]] util::StatusOr<AdminSnapshot> Snapshot(const std::string_view password) const {
-    const auto auth = RequestAuthenticator::Authenticate(password);
-    if (!auth.ok()) {
-      return auth;
+    const auto status = Authenticate(password);
+    if (!status.ok()) {
+      return status;
     }
 
     AdminSnapshot result;
@@ -68,6 +68,10 @@ class AdminService final {
   }
 
  private:
+  [[nodiscard]] static util::Status Authenticate(const std::string_view password) {
+    return RequestAuthenticator::Authenticate(password);
+  }
+
   const core::MarketDataService& service_;
 };
 

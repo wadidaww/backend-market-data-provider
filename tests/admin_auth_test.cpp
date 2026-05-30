@@ -1,12 +1,47 @@
 #include <cassert>
 #include <cstdlib>
 #include <memory>
+#include <string>
 
 #include "market_data_provider/config/config.hpp"
 #include "market_data_provider/core/market_data_service.hpp"
 #include "market_data_provider/transport/admin_service.hpp"
 
+namespace {
+
+class ScopedEnvVar final {
+ public:
+  explicit ScopedEnvVar(const char* name) : name_(name) {
+    if (const char* value = std::getenv(name_); value != nullptr) {
+      had_original_ = true;
+      original_value_ = value;
+    }
+  }
+
+  ~ScopedEnvVar() {
+    if (had_original_) {
+      setenv(name_, original_value_.c_str(), 1);
+    } else {
+      unsetenv(name_);
+    }
+  }
+
+  ScopedEnvVar(const ScopedEnvVar&) = delete;
+  ScopedEnvVar& operator=(const ScopedEnvVar&) = delete;
+  ScopedEnvVar(ScopedEnvVar&&) = delete;
+  ScopedEnvVar& operator=(ScopedEnvVar&&) = delete;
+
+ private:
+  const char* name_;
+  bool had_original_{false};
+  std::string original_value_;
+};
+
+}  // namespace
+
 int main() {
+  ScopedEnvVar password_env("MDP_ADMIN_PASSWORD");
+
   mdp::config::ProviderConfig config;
   config.queue_capacity = 64;
   config.order_book_depth = 10;

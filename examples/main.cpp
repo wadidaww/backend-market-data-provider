@@ -59,8 +59,13 @@ int main() {
   }
 
   mdp::transport::AdminService admin(service);
-  setenv("MDP_ADMIN_PASSWORD", "example-admin-password", 1);
-  const auto snapshot = admin.Snapshot("example-admin-password");
+  const char* admin_password = std::getenv("MDP_ADMIN_PASSWORD");
+  if (admin_password == nullptr) {
+    std::cerr << "MDP_ADMIN_PASSWORD must be set in the environment\n";
+    return 1;
+  }
+
+  const auto snapshot = admin.Snapshot(admin_password);
   if (!snapshot.ok()) {
     std::cerr << "Admin request failed: " << snapshot.status().message() << '\n';
     return 1;
