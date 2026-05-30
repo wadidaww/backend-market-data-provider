@@ -2,9 +2,12 @@
 
 #include <cstdint>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "market_data_provider/core/market_data_service.hpp"
+#include "market_data_provider/transport/request_authenticator.hpp"
+#include "market_data_provider/util/status.hpp"
 
 namespace mdp::transport {
 
@@ -30,12 +33,30 @@ class AdminService final {
  public:
   explicit AdminService(const core::MarketDataService& service) : service_(service) {}
 
-  [[nodiscard]] bool Health() const { return true; }
-  [[nodiscard]] bool Ready() const { return service_.is_ready(); }
+  [[nodiscard]] util::StatusOr<bool> Health(const std::string_view password) const {
+    const auto auth = RequestAuthenticator::Authenticate(password);
+    if (!auth.ok()) {
+      return auth;
+    }
+    return true;
+  }
 
-  [[nodiscard]] AdminSnapshot Snapshot() const {
+  [[nodiscard]] util::StatusOr<bool> Ready(const std::string_view password) const {
+    const auto auth = RequestAuthenticator::Authenticate(password);
+    if (!auth.ok()) {
+      return auth;
+    }
+    return service_.is_ready();
+  }
+
+  [[nodiscard]] util::StatusOr<AdminSnapshot> Snapshot(const std::string_view password) const {
+    const auto auth = RequestAuthenticator::Authenticate(password);
+    if (!auth.ok()) {
+      return auth;
+    }
+
     AdminSnapshot result;
-    result.ready = Ready();
+    result.ready = service_.is_ready();
     result.ingested_events = service_.metrics().ingested_events.load(std::memory_order_relaxed);
     result.dropped_events = service_.metrics().dropped_events.load(std::memory_order_relaxed);
     result.parse_errors = service_.metrics().parse_errors.load(std::memory_order_relaxed);

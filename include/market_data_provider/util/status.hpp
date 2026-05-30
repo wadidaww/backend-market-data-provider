@@ -7,6 +7,7 @@ namespace mdp::util {
 enum class ErrorCategory {
   None,
   Config,
+  Unauthorized,
   Parse,
   SequenceGap,
   QueueFull,

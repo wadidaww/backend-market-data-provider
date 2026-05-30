@@ -47,6 +47,10 @@ if(MDP_BUILD_TESTS)
   add_executable(parser_robustness_test tests/parser_robustness_test.cpp)
   target_link_libraries(parser_robustness_test PRIVATE market_data_provider)
   add_test(NAME parser_robustness_test COMMAND parser_robustness_test)
+
+  add_executable(admin_auth_test tests/admin_auth_test.cpp)
+  target_link_libraries(admin_auth_test PRIVATE market_data_provider)
+  add_test(NAME admin_auth_test COMMAND admin_auth_test)
 endif()
 
 if(MDP_BUILD_BENCHMARKS)

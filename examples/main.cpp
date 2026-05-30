@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <cstdlib>
 
 #include "market_data_provider/config/config.hpp"
 #include "market_data_provider/core/market_data_service.hpp"
@@ -58,9 +59,15 @@ int main() {
   }
 
   mdp::transport::AdminService admin(service);
-  const auto snapshot = admin.Snapshot();
-  std::cout << "ready=" << std::boolalpha << snapshot.ready
-            << " ingested=" << snapshot.ingested_events << " instruments=" << snapshot.instruments
+  setenv("MDP_ADMIN_PASSWORD", "example-admin-password", 1);
+  const auto snapshot = admin.Snapshot("example-admin-password");
+  if (!snapshot.ok()) {
+    std::cerr << "Admin request failed: " << snapshot.status().message() << '\n';
+    return 1;
+  }
+  std::cout << "ready=" << std::boolalpha << snapshot.value().ready
+            << " ingested=" << snapshot.value().ingested_events
+            << " instruments=" << snapshot.value().instruments
             << '\n';
 
   return 0;

@@ -31,8 +31,11 @@ ctest --test-dir build --output-on-failure
 ## Run example
 
 ```bash
+export MDP_ADMIN_PASSWORD=example-admin-password
 ./build/mdp_example
 ```
+
+`AdminService` request entrypoints (`Health`, `Ready`, `Snapshot`) require the provided password to match `MDP_ADMIN_PASSWORD`.
 
 ## Run benchmark
 
