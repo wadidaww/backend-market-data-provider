@@ -18,13 +18,12 @@ int main() {
   std::size_t callback_count = 0;
   mdp::normalization::SubscriptionRequest request{};
   request.instrument_id = std::string("XNAS:AAPL");
-  service.Subscribe(request,
-                    [&callback_count](const mdp::normalization::MarketEvent&) {
-                      ++callback_count;
-                    });
+  service.Subscribe(
+      request, [&callback_count](const mdp::normalization::MarketEvent&) { ++callback_count; });
 
   mdp::normalization::Trade trade;
-  trade.instrument = {.instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
+  trade.instrument = {
+      .instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
   trade.price = 100.0;
   trade.quantity = 10.0;
   trade.sequence_number = 1;
@@ -36,9 +35,11 @@ int main() {
       .sequence_number = 1,
   }});
 
-  assert(adapter.Start([&service](mdp::normalization::MarketEvent event) {
-           return service.Ingest(std::move(event));
-         }).ok());
+  assert(adapter
+             .Start([&service](mdp::normalization::MarketEvent event) {
+               return service.Ingest(std::move(event));
+             })
+             .ok());
 
   assert(callback_count == 1);
   assert(store->raw().size() == 1);

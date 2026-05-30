@@ -85,7 +85,8 @@ struct SubscriptionRequest {
   std::optional<DataType> data_type;
 };
 
-using MarketEventPayload = std::variant<Trade, Quote, OrderBookSnapshot, OrderBookDelta, Instrument>;
+using MarketEventPayload =
+    std::variant<Trade, Quote, OrderBookSnapshot, OrderBookDelta, Instrument>;
 
 struct MarketEvent {
   DataType type{DataType::Trade};

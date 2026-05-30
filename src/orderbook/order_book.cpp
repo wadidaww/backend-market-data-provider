@@ -6,7 +6,8 @@ namespace mdp::orderbook {
 
 util::Status OrderBook::ValidateLevel(const normalization::OrderBookLevel& level) {
   if (level.price < 0.0 || level.quantity < 0.0) {
-    return util::Status::Error(util::ErrorCategory::Parse, "price and quantity must be non-negative");
+    return util::Status::Error(util::ErrorCategory::Parse,
+                               "price and quantity must be non-negative");
   }
   return util::Status::Ok();
 }

@@ -28,6 +28,16 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
+## Lint and format
+
+```bash
+cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+clang-tidy -p build $(find src tests examples benchmarks -type f -name '*.cpp')
+clang-format -i $(find include src tests examples benchmarks -type f \( -name '*.hpp' -o -name '*.cpp' \))
+```
+
+A GitHub Actions CI workflow is available at `.github/workflows/ci.yml` and runs build, tests, lint, and formatter checks.
+
 ## Run example
 
 ```bash

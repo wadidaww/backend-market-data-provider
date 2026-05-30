@@ -6,7 +6,8 @@ int main() {
   mdp::orderbook::OrderBook book(2);
 
   mdp::normalization::OrderBookSnapshot snapshot;
-  snapshot.instrument = {.instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
+  snapshot.instrument = {
+      .instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
   snapshot.sequence_number = 10;
   snapshot.bids = {{mdp::normalization::Side::Bid, 100.0, 5.0},
                    {mdp::normalization::Side::Bid, 99.0, 4.0},

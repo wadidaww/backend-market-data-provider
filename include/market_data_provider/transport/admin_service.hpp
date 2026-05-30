@@ -62,8 +62,8 @@ class AdminService final {
     result.parse_errors = service_.metrics().parse_errors.load(std::memory_order_relaxed);
     result.queue_depth = service_.metrics().queue_depth.load(std::memory_order_relaxed);
     result.instruments = service_.state_store().latest().size();
-    result.source_status.push_back({"mock", true,
-                                    service_.metrics().reconnect_count.load(std::memory_order_relaxed)});
+    result.source_status.push_back(
+        {"mock", true, service_.metrics().reconnect_count.load(std::memory_order_relaxed)});
     return result;
   }
 

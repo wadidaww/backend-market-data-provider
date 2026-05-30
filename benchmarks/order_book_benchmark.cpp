@@ -8,7 +8,8 @@ int main() {
   mdp::orderbook::OrderBook book(20);
 
   mdp::normalization::OrderBookSnapshot snapshot;
-  snapshot.instrument = {.instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
+  snapshot.instrument = {
+      .instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
   snapshot.sequence_number = 1;
   for (int i = 0; i < 20; ++i) {
     snapshot.bids.push_back({mdp::normalization::Side::Bid, 100.0 - i, 1.0});

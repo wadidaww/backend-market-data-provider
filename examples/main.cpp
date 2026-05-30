@@ -24,17 +24,17 @@ int main() {
 
   mdp::normalization::SubscriptionRequest request{};
   request.instrument_id = std::string("XNAS:AAPL");
-  service.Subscribe(request,
-                    [](const mdp::normalization::MarketEvent& event) {
-                      if (event.type == mdp::normalization::DataType::Trade) {
-                        const auto& trade = std::get<mdp::normalization::Trade>(event.payload);
-                        std::cout << "trade " << trade.instrument.instrument_id << " px=" << trade.price
-                                  << " qty=" << trade.quantity << '\n';
-                      }
-                    });
+  service.Subscribe(request, [](const mdp::normalization::MarketEvent& event) {
+    if (event.type == mdp::normalization::DataType::Trade) {
+      const auto& trade = std::get<mdp::normalization::Trade>(event.payload);
+      std::cout << "trade " << trade.instrument.instrument_id << " px=" << trade.price
+                << " qty=" << trade.quantity << '\n';
+    }
+  });
 
   mdp::normalization::Trade trade;
-  trade.instrument = {.instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
+  trade.instrument = {
+      .instrument_id = "XNAS:AAPL", .venue = "XNAS", .symbol = "AAPL", .asset_class = "equity"};
   trade.price = 190.25;
   trade.quantity = 100;
   trade.sequence_number = 1;
@@ -72,8 +72,7 @@ int main() {
   }
   std::cout << "ready=" << std::boolalpha << snapshot.value().ready
             << " ingested=" << snapshot.value().ingested_events
-            << " instruments=" << snapshot.value().instruments
-            << '\n';
+            << " instruments=" << snapshot.value().instruments << '\n';
 
   return 0;
 }

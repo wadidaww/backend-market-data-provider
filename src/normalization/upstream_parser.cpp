@@ -46,11 +46,13 @@ util::StatusOr<std::int64_t> ParseInt64(std::string_view text) {
 
 }  // namespace
 
-util::StatusOr<Trade> UpstreamTradeParser::ParseCsv(const std::string_view line, std::string source) {
+util::StatusOr<Trade> UpstreamTradeParser::ParseCsv(const std::string_view line,
+                                                    std::string source) {
   const auto fields = Split(line, ',');
   if (fields.size() != 8) {
     return util::Status::Error(util::ErrorCategory::Parse,
-                               "trade csv must have 8 columns: venue,symbol,asset_class,price,qty,seq,exchange_ts,receive_ts");
+                               "trade csv must have 8 columns: "
+                               "venue,symbol,asset_class,price,qty,seq,exchange_ts,receive_ts");
   }
 
   auto price = ParseDouble(fields[3]);
